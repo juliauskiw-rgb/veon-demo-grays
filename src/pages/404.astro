@@ -1,0 +1,32 @@
+---
+import Base from "../layouts/Base.astro";
+import Footer from "../components/Footer.astro";
+import { phones } from "../data/club";
+const home = import.meta.env.BASE_URL.endsWith("/") ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
+---
+<Base lang="uk" title="Сторінку не знайдено | Sport Villa Grays" description="Такої сторінки немає. Перейдіть на головну Sport Villa Grays у Вишгороді.">
+  <section id="top" class="nf on-field" aria-labelledby="nf-title">
+    <div class="container nf__inner">
+      <span class="baseline" aria-hidden="true"></span>
+      <h1 id="nf-title">Сторінку не знайдено</h1>
+      <p>Можливо, адреса змінилась. Почніть з головної або подзвоніть на рецепцію тенісу.</p>
+      <ul class="nf__links" role="list">
+        <li><a class="btn btn--light" href={home}>На головну</a></li>
+        <li><a href={`${home}#courts`}>Корти і ціни</a></li>
+        <li><a href={`${home}#school`}>Школа тенісу</a></li>
+        <li><a class="phone-line" href={phones.tennis.tel}>{phones.tennis.display}</a></li>
+      </ul>
+    </div>
+  </section>
+  <Footer slot="footer" />
+</Base>
+
+<style>
+  .nf { min-height: 70svh; display: grid; align-items: center; padding-block: var(--space-16); }
+  .nf__inner { display: grid; gap: var(--space-6); }
+  .nf .baseline { color: var(--color-chalk); margin: 0; }
+  .nf h1 { font-size: var(--fs-h1); font-weight: 800; text-wrap: balance; }
+  .nf p { color: var(--color-on-field-muted); font-size: var(--fs-lead); max-width: 36rem; }
+  .nf__links { list-style: none; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3) var(--space-6); }
+  .nf__links a:not(.btn) { min-height: 44px; display: inline-flex; align-items: center; font-weight: 600; }
+</style>

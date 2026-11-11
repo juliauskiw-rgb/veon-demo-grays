@@ -1,0 +1,195 @@
+---
+import FutureLink from "./FutureLink.astro";
+import Icon from "./Icon.astro";
+import { phones } from "../data/club";
+import logoGreen from "../assets/logo-grays-green.png";
+
+const anchors = [
+  { href: "#courts", label: "Корти" },
+  { href: "#prices", label: "Ціни" },
+  { href: "#school", label: "Школа" },
+  { href: "#club", label: "Клуб" },
+];
+---
+<header class="site-header" data-rec="U-R002,U-R007">
+  <div class="container bar">
+    <a class="logo" href="#top" aria-label="Sport Villa Grays, на початок сторінки">
+      <img class="logo__mark" src={logoGreen.src} width="32" height="40" alt="" decoding="async" />
+      <span class="logo__name" aria-hidden="true">Sport Villa Grays</span>
+    </a>
+
+    <nav class="nav" id="site-nav" aria-label="Головне меню" data-open="false">
+      <ul class="nav__list" role="list">
+        {anchors.map((a) => <li><a class="nav__link" href={a.href}>{a.label}</a></li>)}
+        <li class="nav__future"><FutureLink arrow={false}>Фітнес</FutureLink></li>
+        <li><a class="nav__link" href="#contacts">Контакти</a></li>
+      </ul>
+      <span class="nav__indicator" aria-hidden="true"></span>
+      <div class="nav__call">
+        <a class="btn btn--action" href={phones.tennis.tel}>Подзвонити на рецепцію</a>
+        <p class="phone-line">{phones.tennis.display}</p>
+      </div>
+    </nav>
+
+    <div class="bar__actions">
+      <p class="bar__phone phone-line"><a href={phones.tennis.tel}>{phones.tennis.display}</a></p>
+      <a class="btn btn--action bar__book" href={phones.tennis.tel}>
+        <Icon name="phone" />
+        <span>Забронювати</span>
+      </a>
+      <button class="menu-toggle" type="button" aria-controls="site-nav" aria-expanded="false">
+        <span class="menu-toggle__open"><Icon name="menu" /></span>
+        <span class="menu-toggle__close"><Icon name="close" /></span>
+        <span class="visually-hidden">Меню</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky; top: 0; z-index: 50;
+    background: var(--color-chalk); color: var(--color-ink);
+    border-bottom: 1px solid var(--color-chalk-dim);
+  }
+  .bar { display: flex; align-items: center; gap: var(--space-4); height: var(--header-h); }
+
+  .logo { display: inline-flex; align-items: center; gap: var(--space-3); text-decoration: none; color: var(--color-field); min-height: 44px; flex: none; }
+  .logo__mark { width: 32px; height: 40px; object-fit: contain; }
+  .logo__name { font-family: var(--font-display); font-weight: 700; font-size: 1.0625rem; letter-spacing: -0.01em; white-space: nowrap; }
+
+  .bar__actions { margin-left: auto; display: flex; align-items: center; gap: var(--space-2); }
+  .bar__phone { display: none; font-weight: 500; }
+  .bar__phone a { text-decoration: none; }
+  .bar__phone a:hover { text-decoration: underline; }
+  .bar__book { padding-inline: var(--space-4); min-height: 44px; }
+
+  .menu-toggle {
+    display: none; width: 44px; height: 44px; align-items: center; justify-content: center;
+    background: transparent; color: var(--color-field); border: var(--line) solid var(--color-field); border-radius: var(--radius); cursor: pointer;
+    transition: background-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+  }
+  .menu-toggle:hover { background: var(--color-chalk-dim); }
+  .menu-toggle:active { transform: scale(.96); }
+  .menu-toggle:disabled { cursor: not-allowed; color: var(--color-ink-muted); border-color: var(--color-chalk-dim); }
+  .menu-toggle :global(svg) { width: 22px; height: 22px; }
+  .menu-toggle__close { display: none; }
+  :global(.js) .menu-toggle { display: inline-flex; }
+
+  /* mobile and tablet: full-screen menu */
+  .nav { display: none; }
+  .nav__indicator { display: none; }
+  @media (max-width: 1023px) {
+    :global(.js) .nav[data-open="true"] {
+      display: flex; flex-direction: column; justify-content: space-between;
+      position: fixed; inset: var(--header-h) 0 0 0; z-index: 49;
+      background: var(--color-field-deep); color: var(--color-chalk);
+      padding: var(--space-6) var(--space) var(--space-10);
+      overflow-y: auto;
+    }
+    .nav__list { list-style: none; display: grid; }
+    .nav__list li { border-bottom: 1px solid var(--color-field-line); }
+    .nav__link, .nav__future :global(.future-link) {
+      display: flex; align-items: center; min-height: 56px;
+      font-family: var(--font-display); font-weight: 600; font-size: var(--fs-h3); text-decoration: none;
+    }
+    .nav__future :global(.future-link) { color: var(--color-on-field-muted); }
+    .nav__future :global(.future-link__note) { left: auto; right: 0; top: 50%; transform: translateY(-50%); background: var(--color-chalk); color: var(--color-ink); }
+    .nav__link:hover { text-decoration: underline; }
+    .nav__link:focus-visible, .nav__future :global(.future-link:focus-visible) { outline-color: var(--color-chalk); }
+    .nav__call { display: grid; gap: var(--space-2); margin-top: var(--space-10); }
+    .nav__call .btn { width: 100%; }
+    .nav__call p { color: var(--color-on-field-muted); }
+    :global(.menu-open) .menu-toggle__open { display: none; }
+    :global(.menu-open) .menu-toggle__close { display: inline-flex; }
+  }
+  @media (max-width: 419px) {
+    .logo__name { display: none; }
+  }
+
+  /* desktop: one row, active anchor underline */
+  @media (min-width: 1024px) {
+    .bar { gap: var(--space-10); }
+    .nav { display: block; position: relative; }
+    .nav__list { list-style: none; display: flex; gap: var(--space-6); align-items: center; }
+    .nav__link, .nav__future :global(.future-link) {
+      display: inline-flex; align-items: center; min-height: 44px; text-decoration: none; font-weight: 500; color: var(--color-ink);
+    }
+    .nav__future :global(.future-link) { color: var(--color-action-text); text-decoration: underline dotted; text-underline-offset: 0.3em; }
+    .nav__link:hover { text-decoration: underline; text-underline-offset: 0.3em; }
+    .nav__link[aria-current="true"] { color: var(--color-field); }
+    .nav__indicator {
+      display: block; position: absolute; left: 0; bottom: 6px; width: 100px; height: var(--line);
+      background: var(--color-field); transform-origin: left center;
+      transform: translateX(var(--ind-x, 0px)) scaleX(var(--ind-s, 0));
+      transition: transform 300ms var(--ease-out);
+    }
+    .nav__call { display: none; }
+    :global(.js) .menu-toggle { display: none; }
+    .bar__book { padding-inline: var(--space-6); min-height: var(--btn-h); }
+  }
+  @media (min-width: 1280px) {
+    .bar__phone { display: block; }
+    .bar__actions { gap: var(--space-4); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .nav__indicator { transition: none; }
+    .menu-toggle:active { transform: none; }
+  }
+</style>
+
+<script>
+  const header = document.querySelector<HTMLElement>(".site-header");
+  const nav = document.querySelector<HTMLElement>("#site-nav");
+  const toggle = document.querySelector<HTMLButtonElement>(".menu-toggle");
+  const indicator = document.querySelector<HTMLElement>(".nav__indicator");
+  const links = Array.from(document.querySelectorAll<HTMLAnchorElement>(".nav__link"));
+
+  // Mobile menu
+  const setOpen = (open: boolean) => {
+    if (!nav || !toggle) return;
+    nav.dataset.open = String(open);
+    toggle.setAttribute("aria-expanded", String(open));
+    document.documentElement.classList.toggle("menu-open", open);
+    document.body.style.overflow = open ? "hidden" : "";
+    if (open) nav.querySelector<HTMLElement>("a, [tabindex]")?.focus();
+  };
+  toggle?.addEventListener("click", () => setOpen(nav?.dataset.open !== "true"));
+  nav?.addEventListener("click", (e) => {
+    if ((e.target as HTMLElement).closest("a")) setOpen(false);
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && nav?.dataset.open === "true") { setOpen(false); toggle?.focus(); }
+  });
+  window.matchMedia("(min-width: 1024px)").addEventListener("change", (m) => { if (m.matches) setOpen(false); });
+
+  // Active anchor: underline moves under the item of the section in view
+  const targets = links
+    .map((a) => ({ a, el: document.querySelector<HTMLElement>(a.getAttribute("href") || "") }))
+    .filter((t): t is { a: HTMLAnchorElement; el: HTMLElement } => !!t.el);
+  const place = (a: HTMLAnchorElement | null) => {
+    links.forEach((l) => l.removeAttribute("aria-current"));
+    if (!indicator) return;
+    if (!a) { indicator.style.setProperty("--ind-s", "0"); return; }
+    a.setAttribute("aria-current", "true");
+    const navBox = nav!.getBoundingClientRect();
+    const box = a.getBoundingClientRect();
+    indicator.style.setProperty("--ind-x", `${box.left - navBox.left}px`);
+    indicator.style.setProperty("--ind-s", `${box.width / 100}`);
+  };
+  let ticking = false;
+  const update = () => {
+    ticking = false;
+    const line = (header?.offsetHeight || 64) + window.innerHeight * 0.3;
+    let current: HTMLAnchorElement | null = null;
+    for (const t of targets) {
+      const r = t.el.getBoundingClientRect();
+      if (r.top <= line && r.bottom > line) current = t.a;
+    }
+    place(current);
+  };
+  const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll);
+  update();
+</script>

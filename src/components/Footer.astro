@@ -1,0 +1,40 @@
+---
+import FutureLink from "./FutureLink.astro";
+import { phones, email, mailto } from "../data/club";
+import logoChalk from "../assets/logo-grays-chalk.png";
+const year = 2026;
+---
+<footer class="site-footer on-field">
+  <div class="container foot">
+    <a class="foot__logo" href="#top" aria-label="Sport Villa Grays, на початок сторінки">
+      <img class="foot__mark" src={logoChalk.src} width="32" height="40" alt="" loading="lazy" decoding="async" />
+      <span aria-hidden="true">Sport Villa Grays</span>
+    </a>
+    <div class="foot__contact">
+      <a class="phone-line" href={phones.tennis.tel}>{phones.tennis.display}</a>
+      <a href={mailto("Питання до клубу")}>{email}</a>
+    </div>
+    <ul class="foot__links" role="list">
+      <li><FutureLink>Табори</FutureLink></li>
+      <li data-rec="U-R005"><FutureLink>Турніри і новини</FutureLink></li>
+      <li><FutureLink>Політика конфіденційності</FutureLink></li>
+    </ul>
+    <p class="foot__copy">© {year} Sport Villa Grays. Вишгород.</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer { background: var(--color-field-deep); padding-block: var(--space-10); font-size: var(--fs-small); }
+  .foot { display: grid; gap: var(--space-6); }
+  .foot__logo { display: inline-flex; align-items: center; gap: var(--space-3); text-decoration: none; font-family: var(--font-display); font-weight: 700; font-size: var(--fs-body); min-height: 44px; justify-self: start; }
+  .foot__mark { width: 32px; height: 40px; object-fit: contain; }
+  .foot__contact { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-6); }
+  .foot__contact a { min-height: 44px; display: inline-flex; align-items: center; font-weight: 600; font-size: var(--fs-body); }
+  .foot__links { list-style: none; display: flex; flex-wrap: wrap; gap: 0 var(--space-6); }
+  .foot__copy { color: var(--color-on-field-muted); }
+  @media (min-width: 1024px) {
+    .foot { grid-template-columns: auto auto minmax(0, 1fr); align-items: center; column-gap: var(--space-10); }
+    .foot__links { justify-content: end; }
+    .foot__copy { grid-column: 1 / -1; padding-top: var(--space-4); border-top: 1px solid var(--color-field-line); }
+  }
+</style>

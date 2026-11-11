@@ -1,0 +1,73 @@
+/* Hallmark · shape: court-from-above split page · genre: modern-minimal · theme: custom · job: book · idea: "Сторінка — корт згори: сітка ділить її на гру для дорослих і школу для дітей" · vibe: "точно, спокійно, по-клубному, спортивна розмітка" * paper: #004D28 · accent: #E55A35 · display: Geologica · body: Golos Text · hero: H1 через сітку корту згори, дві рівні дії в полях подачі · nav: світла смуга з дією «Забронювати» · footer: компактна глибока смуга · imagery: client photos · signature: сітка першого екрана і «Тиждень корту» з праймом кольором * axes: dark/grotesk-geometric/warm · posture: committed · contrast: pass · fold: pass · v2.0.0 */
+/* Hallmark · pre-emit critique: P4 H4 E4 S4 R4 V4 · weakest: imagery, only the client's own photos (hall, child at the net, lobby, sauna); no facade shot exists, so the club block leads with the lobby */
+/* Client design tokens: only from design/concept.md (veon-concept: colors, fonts). */
+:root {
+  /* palette */
+  --color-field: #004D28;        /* court field, brand green */
+  --color-field-deep: #00331A;   /* footer, mobile menu */
+  --color-chalk: #F5F6EF;        /* court lines and light background */
+  --color-ink: #0F2418;          /* text on light */
+  --color-ink-muted: #4B5F52;    /* secondary text on light */
+  --color-on-field-muted: #C9D8CC; /* secondary text on field */
+  --color-action: #E55A35;       /* action fill only */
+  --color-action-text: #B8401F;  /* action as text / FutureLink on light */
+  --color-action-hover: #EF7552; /* hover fill of the action button (same hue, lighter: keeps ink contrast) */
+  --color-chalk-dim: #DCE3D8;    /* hover fill of light buttons, rule lines on light */
+  --color-field-line: #2F6B4B;   /* thin rules on field */
+
+  /* base names expected by the demo base */
+  --color-bg: var(--color-chalk);
+  --color-text: var(--color-ink);
+  --color-accent: var(--color-action);
+
+  /* type */
+  --font-display: "Geologica Variable", "Geologica", system-ui, sans-serif;
+  --font-body: "Golos Text Variable", "Golos Text", system-ui, sans-serif;
+  --fs-small: 0.875rem;   /* 14 */
+  --fs-body: 1.0625rem;   /* 17 */
+  --fs-lead: 1.375rem;    /* 22 */
+  --fs-h3: 1.75rem;       /* 28 */
+  --fs-h2: clamp(2rem, 1.2rem + 2.4vw, 3rem);          /* 32 -> 48 */
+  --fs-h1: clamp(2.25rem, 1.2rem + 4.4vw, 5.25rem);    /* 36 -> 84 */
+  --fs-figure: clamp(2.5rem, 1.6rem + 3vw, 4.5rem);    /* prices, court count */
+  --fs-figure-sm: clamp(2rem, 1.4rem + 1.4vw, 2.5rem); /* group ages */
+  --lh-text: 1.6;
+  --lh-head: 1.08;
+
+  /* spacing, 4px scale; rhythm 8 16 24 40 64 104 */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-26: 104px;
+  --space: 20px;                 /* page gutter, 40px from 1024 */
+  --container: 1360px;
+  --gap: 24px;
+  --section-pad: var(--space-16);
+
+  /* shape and lines */
+  --radius: 4px;
+  --line: 2px;
+  --net: 6px;
+  --btn-h: 48px;
+  --header-h: 56px;
+
+  /* motion */
+  --ease-out: cubic-bezier(.2, .7, .2, 1);
+  --dur: 600ms;
+  --dur-fast: 180ms;
+  --dur-line: 700ms;
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --space: 40px;
+    --btn-h: 52px;
+    --header-h: 64px;
+    --section-pad: var(--space-26);
+  }
+}

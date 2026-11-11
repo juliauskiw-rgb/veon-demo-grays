@@ -1,0 +1,47 @@
+---
+import Base from "../layouts/Base.astro";
+import Header from "../components/Header.astro";
+import Hero from "../components/Hero.astro";
+import Courts from "../components/Courts.astro";
+import School from "../components/School.astro";
+import Trust from "../components/Trust.astro";
+import Club from "../components/Club.astro";
+import Contacts from "../components/Contacts.astro";
+import Footer from "../components/Footer.astro";
+import { phones, email, address, socials } from "../data/club";
+
+const title = "Тенісні корти у Вишгороді — оренда і школа тенісу | Sport Villa Grays";
+const description = "3 хард-корти ITF 2 від 1950 грн/год, дитяча школа тенісу Play&Stay з 4 років, безкоштовне пробне заняття. Вишгород, вул. Парусна, 203.";
+
+// schema.org TennisComplex (SportsActivityLocation); facts from veon/client.json, no ratings (no reviews exist)
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "TennisComplex",
+  name: "Sport Villa Grays",
+  telephone: phones.tennis.tel.replace("tel:", ""),
+  email,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: address.street,
+    addressLocality: "Вишгород",
+    addressRegion: "Київська область",
+    addressCountry: "UA",
+  },
+  openingHoursSpecification: [
+    { "@type": "OpeningHoursSpecification", dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], opens: "07:00", closes: "22:00" },
+    { "@type": "OpeningHoursSpecification", dayOfWeek: ["Saturday", "Sunday"], opens: "08:00", closes: "22:00" },
+  ],
+  sameAs: socials.map((s) => s.url),
+};
+---
+<Base lang="uk" title={title} description={description}>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  <Header slot="header" />
+  <Hero />
+  <Courts />
+  <School />
+  <Trust />
+  <Club />
+  <Contacts />
+  <Footer slot="footer" />
+</Base>

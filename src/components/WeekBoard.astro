@@ -1,0 +1,202 @@
+---
+import Icon from "./Icon.astro";
+import { tariffs, season, week, dayStart, dayEnd, courtTerms, yearContract, phones, formatPrice } from "../data/club";
+
+const hours = Array.from({ length: dayEnd - dayStart }, (_, i) => dayStart + i);
+const kind = (d: (typeof week)[number], h: number) => (h < d.open ? "closed" : h >= d.prime ? "prime" : "off");
+const label = { prime: "прайм", off: "не прайм", closed: "зачинено" } as const;
+const [standard, member] = tariffs;
+const pct = (h: number) => ((h - dayStart) / (dayEnd - dayStart)) * 100;
+---
+<div id="prices" class="board">
+  <div class="board__prices">
+    <h3 class="board__title">Оренда корту</h3>
+    <p class="board__season">Сезон {season.from}–{season.to}, ціна за 1 годину</p>
+
+    <div class="switch" role="radiogroup" aria-label="Тариф">
+      {tariffs.map((t, i) => (
+        <button type="button" role="radio" class="switch__opt" data-tariff={t.id}
+          aria-checked={i === 0 ? "true" : "false"} tabindex={i === 0 ? 0 : -1}>{t.name}</button>
+      ))}
+    </div>
+
+    <div class="price-pair" aria-live="polite">
+      <div class="price price--prime">
+        <span class="price__label">Прайм</span>
+        <span class="price__value num"><span data-price="prime" data-standard={formatPrice(standard.prime)} data-member={formatPrice(member.prime)}>{formatPrice(standard.prime)}</span> <small>грн/год</small></span>
+      </div>
+      <div class="price price--off">
+        <span class="price__label">Не прайм</span>
+        <span class="price__value num"><span data-price="off" data-standard={formatPrice(standard.offPeak)} data-member={formatPrice(member.offPeak)}>{formatPrice(standard.offPeak)}</span> <small>грн/год</small></span>
+      </div>
+    </div>
+    <p class="price-nojs">{member.name}: <span class="num">{formatPrice(member.prime)}</span> грн/год у прайм, <span class="num">{formatPrice(member.offPeak)}</span> грн/год не в прайм.</p>
+    <p class="board__prime">Прайм: Пн–Пт 15:00–22:00, Сб–Нд увесь день.</p>
+
+    <ul class="terms" role="list">
+      {courtTerms.map((t) => <li>{t}</li>)}
+    </ul>
+    <p class="board__contract">{yearContract}</p>
+
+    <div class="board__cta">
+      <a class="btn btn--action" href={phones.tennis.tel}>Подзвонити на рецепцію <Icon name="arrow" /></a>
+      <a class="board__phone phone-line" href={phones.tennis.tel}>{phones.tennis.display}</a>
+    </div>
+  </div>
+
+  <div class="board__week">
+    <h3 class="board__title board__title--week">Тиждень корту</h3>
+    <ul class="legend" role="list" aria-hidden="true">
+      <li><span class="sw sw--prime"></span>Прайм</li>
+      <li><span class="sw sw--off"></span>Не прайм</li>
+      <li><span class="sw sw--closed"></span>Клуб зачинено</li>
+    </ul>
+
+    <table class="week">
+      <caption class="visually-hidden">Години прайму і не прайму за днями тижня, клуб працює Пн–Пт з 7:00, Сб–Нд з 8:00 до 22:00</caption>
+      <thead>
+        <tr>
+          <th scope="col"><span class="visually-hidden">Година</span></th>
+          {week.map((d) => <th scope="col"><abbr title={d.long}>{d.short}</abbr></th>)}
+        </tr>
+      </thead>
+      <tbody>
+        {hours.map((h) => (
+          <tr>
+            <th scope="row" class="num">{h}:00</th>
+            {week.map((d) => {
+              const k = kind(d, h);
+              return <td class={`c c--${k}`}><span class="visually-hidden">{label[k]}</span></td>;
+            })}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+
+    <div class="bars">
+      {[{ name: "Пн–Пт", d: week[0], text: "7:00–15:00 не прайм, 15:00–22:00 прайм" }, { name: "Сб–Нд", d: week[5], text: "8:00–22:00 прайм" }].map((b) => (
+        <div class="bar-row">
+          <p class="bar-row__name">{b.name}</p>
+          <div class="bar" aria-hidden="true">
+            {b.d.open > dayStart && <span class="seg seg--closed" style={`--a:${pct(dayStart)}%;--b:${pct(b.d.open)}%`}></span>}
+            {b.d.prime > b.d.open && <span class="seg seg--off" style={`--a:${pct(b.d.open)}%;--b:${pct(b.d.prime)}%`}></span>}
+            <span class="seg seg--prime" style={`--a:${pct(b.d.prime)}%;--b:100%`}></span>
+          </div>
+          <p class="bar-row__text">{b.text}</p>
+        </div>
+      ))}
+      <div class="scale num" aria-hidden="true"><span>7:00</span><span>15:00</span><span>22:00</span></div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .board { display: grid; gap: var(--space-10); padding-top: var(--space-10); border-top: var(--line) solid var(--color-field); }
+  .board__title { font-size: var(--fs-h3); }
+  .board__season { color: var(--color-ink-muted); margin-top: var(--space-2); }
+
+  .switch { display: none; margin-top: var(--space-6); border: var(--line) solid var(--color-field); border-radius: var(--radius); width: max-content; max-width: 100%; }
+  :global(.js) .switch { display: inline-flex; }
+  .switch__opt {
+    min-height: 44px; padding: 0 var(--space-4); border: 0; background: transparent; color: var(--color-field);
+    font: 600 var(--fs-body)/1 var(--font-body); cursor: pointer;
+    transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+  }
+  .switch__opt:hover { background: var(--color-chalk-dim); }
+  .switch__opt:active { background: var(--color-chalk-dim); }
+  .switch__opt:disabled { cursor: not-allowed; color: var(--color-ink-muted); }
+  .switch__opt[aria-checked="true"] { background: var(--color-field); color: var(--color-chalk); }
+  .switch__opt:focus-visible { outline-offset: 2px; }
+
+  .price-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-4); margin-top: var(--space-6); }
+  .price { display: grid; gap: var(--space-1); padding-top: var(--space-3); border-top: var(--line) solid var(--color-chalk-dim); }
+  .price--prime { border-top-color: var(--color-field); }
+  .price__label { font-size: var(--fs-small); color: var(--color-ink-muted); }
+  .price__value { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-figure); line-height: 1; color: var(--color-field); white-space: nowrap; }
+  .price__value small { font-family: var(--font-body); font-size: var(--fs-small); font-weight: 500; color: var(--color-ink-muted); }
+  [data-price] { display: inline-block; }
+  :global(.is-swapping) { animation: price-in 250ms var(--ease-out); }
+  @keyframes price-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+  .price-nojs { margin-top: var(--space-3); color: var(--color-ink-muted); }
+  :global(.js) .price-nojs { display: none; }
+  .board__prime { margin-top: var(--space-4); font-weight: 600; }
+  .terms { list-style: none; margin-top: var(--space-6); display: grid; }
+  .terms li { padding-block: var(--space-2); border-top: 1px solid var(--color-chalk-dim); }
+  .terms li:last-child { border-bottom: 1px solid var(--color-chalk-dim); }
+  .board__contract { margin-top: var(--space-4); color: var(--color-ink-muted); }
+  .board__cta { margin-top: var(--space-6); display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3) var(--space-6); }
+  .board__phone { font-weight: 600; text-decoration: none; min-height: 44px; display: inline-flex; align-items: center; }
+  .board__phone:hover { text-decoration: underline; }
+
+  .legend { list-style: none; display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-6); margin: var(--space-4) 0 var(--space-6); font-size: var(--fs-small); color: var(--color-ink-muted); }
+  .legend li { display: inline-flex; align-items: center; gap: var(--space-2); }
+  .sw { width: 16px; height: 16px; border-radius: 2px; display: inline-block; }
+  .sw--prime { background: var(--color-field); }
+  .sw--off { background: var(--color-chalk); box-shadow: inset 0 0 0 var(--line) var(--color-field); }
+  .sw--closed { background: var(--color-chalk-dim); }
+
+  /* desktop week: real table, days across, hours down */
+  .week { display: none; width: 100%; border-collapse: separate; border-spacing: 4px; table-layout: fixed; }
+  .week th { font-weight: 500; font-size: var(--fs-small); color: var(--color-ink-muted); }
+  .week thead th { padding-bottom: var(--space-1); color: var(--color-ink); font-weight: 600; }
+  .week abbr { text-decoration: none; }
+  .week tbody th { text-align: right; padding-right: var(--space-2); width: 4rem; line-height: 1; }
+  .c { height: 22px; border-radius: 2px; }
+  .c--prime { background: var(--color-field); }
+  .c--off { background: var(--color-chalk); box-shadow: inset 0 0 0 var(--line) var(--color-field); }
+  .c--closed { background: var(--color-chalk-dim); }
+
+  /* mobile week: two bars */
+  .bars { display: grid; gap: var(--space-4); }
+  .bar-row { display: grid; gap: var(--space-2); }
+  .bar-row__name { font-weight: 600; }
+  .bar { position: relative; height: 28px; background: var(--color-chalk); border-radius: 2px; }
+  .seg { position: absolute; top: 0; bottom: 0; left: var(--a); right: calc(100% - var(--b)); }
+  .seg--prime { background: var(--color-field); }
+  .seg--off { box-shadow: inset 0 0 0 var(--line) var(--color-field); }
+  .seg--closed { background: var(--color-chalk-dim); }
+  .bar-row__text { font-size: var(--fs-small); color: var(--color-ink-muted); }
+  .scale { position: relative; height: 1.5em; font-size: var(--fs-small); color: var(--color-ink-muted); }
+  .scale span { position: absolute; top: 0; }
+  .scale span:nth-child(1) { left: 0; }
+  .scale span:nth-child(2) { left: calc(8 / 15 * 100%); transform: translateX(-50%); }
+  .scale span:nth-child(3) { right: 0; }
+
+  @media (min-width: 1024px) {
+    .board { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--gap); column-gap: var(--space-16); }
+    .week { display: table; }
+    .bars { display: none; }
+  }
+  @media (max-width: 399px) {
+    .price-pair { grid-template-columns: minmax(0, 1fr); }
+  }
+</style>
+
+<script>
+  const group = document.querySelector<HTMLElement>(".switch");
+  const opts = Array.from(document.querySelectorAll<HTMLButtonElement>(".switch__opt"));
+  const values = Array.from(document.querySelectorAll<HTMLElement>("[data-price]"));
+  const select = (btn: HTMLButtonElement, focus = false) => {
+    if (btn.getAttribute("aria-checked") === "true") return;
+    opts.forEach((o) => { const on = o === btn; o.setAttribute("aria-checked", String(on)); o.tabIndex = on ? 0 : -1; });
+    if (focus) btn.focus();
+    const t = btn.dataset.tariff === "member" ? "member" : "standard";
+    values.forEach((v) => {
+      v.textContent = v.dataset[t] || "";
+      v.classList.remove("is-swapping");
+      void v.offsetWidth; // restart the animation
+      v.classList.add("is-swapping");
+    });
+  };
+  opts.forEach((o) => o.addEventListener("click", () => select(o)));
+  group?.addEventListener("keydown", (e) => {
+    const i = opts.findIndex((o) => o === document.activeElement);
+    if (i < 0) return;
+    if (["ArrowRight", "ArrowDown", "ArrowLeft", "ArrowUp"].includes(e.key)) {
+      e.preventDefault();
+      const step = e.key === "ArrowRight" || e.key === "ArrowDown" ? 1 : -1;
+      select(opts[(i + step + opts.length) % opts.length], true);
+    }
+  });
+</script>

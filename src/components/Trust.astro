@@ -1,0 +1,44 @@
+---
+import FutureLink from "./FutureLink.astro";
+const facts = [
+  { title: "Покриття з сертифікатом ITF 2", text: "Хард CASALI SPORT «Surface Evolution», середньо-повільний м'яч." },
+  { title: "Тренери з сертифікатами ITF Play&Stay", text: "Діти вчаться за методикою Міжнародної тенісної федерації, групи від 4 років." },
+  { title: "Еліна Світоліна і Сергій Стаховський схвально відгукнулися про сервіс клубу", text: "" },
+];
+---
+<section id="trust" class="section trust on-field" data-rec="U-R008" aria-labelledby="trust-title">
+  <div class="container">
+    <span class="baseline" data-reveal="line" aria-hidden="true"></span>
+    <h2 id="trust-title" class="trust__title">Чому Grays</h2>
+    <ol class="facts" role="list">
+      {facts.map((f) => (
+        <li class="fact">
+          <h3 class="fact__title">{f.title}</h3>
+          {f.text && <p class="fact__text">{f.text}</p>}
+        </li>
+      ))}
+    </ol>
+    <div class="trust__team">
+      <p>У клубі 8 тренерів.</p>
+      <FutureLink>Тренери</FutureLink>
+    </div>
+  </div>
+</section>
+
+<style>
+  .trust { padding-block: var(--section-pad); }
+  .trust .baseline { color: var(--color-chalk); }
+  .trust__title { margin-bottom: var(--space-10); }
+  .facts { list-style: none; display: grid; }
+  .fact { display: grid; gap: var(--space-3); padding-block: var(--space-10); border-top: 1px solid var(--color-field-line); }
+  .fact__title { font-size: var(--fs-h2); font-weight: 600; line-height: 1.12; max-width: 22ch; }
+  .fact:last-child .fact__title { max-width: 30ch; }
+  .fact__text { color: var(--color-on-field-muted); font-size: var(--fs-lead); line-height: 1.45; max-width: 34rem; }
+  .trust__team { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-6); padding-top: var(--space-10); border-top: 1px solid var(--color-field-line); font-size: var(--fs-lead); }
+
+  @media (min-width: 1024px) {
+    .trust__title { margin-bottom: var(--space-16); }
+    .fact { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); column-gap: var(--space-16); align-items: start; padding-block: var(--space-16); }
+    .fact__text { padding-top: var(--space-2); }
+  }
+</style>

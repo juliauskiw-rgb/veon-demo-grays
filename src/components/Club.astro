@@ -1,0 +1,78 @@
+---
+import { Picture } from "astro:assets";
+import FutureLink from "./FutureLink.astro";
+import lobby from "../assets/club-lobby.jpg";
+import sauna from "../assets/club-sauna.jpg";
+import { atCourt, nearby } from "../data/club";
+---
+<section id="club" class="section club" data-rec="U-R010" aria-labelledby="club-title">
+  <div class="container">
+    <span class="baseline" data-reveal="line" aria-hidden="true"></span>
+    <div class="section-head">
+      <h2 id="club-title">Клуб: роздягальні, сауна, фітнес, ресторан</h2>
+      <p>Усе для гри і відпочинку на одній території у Вишгороді.</p>
+    </div>
+  </div>
+
+  <figure class="club__wide" data-reveal="fade">
+    <Picture
+      src={lobby}
+      formats={["avif", "webp"]}
+      widths={[640, 960, 1280, 1600, 2000, 2400]}
+      sizes="100vw"
+      alt="Хол клубу Sport Villa Grays: зелені дивани, дерев'яні панелі з написом GRAYS, рослини"
+      loading="lazy"
+      decoding="async"
+    />
+  </figure>
+
+  <div class="container club__grid">
+    <div class="list-block">
+      <h3 class="list-block__title">На корті</h3>
+      <ul role="list">{atCourt.map((t) => <li>{t}</li>)}</ul>
+    </div>
+    <div class="list-block">
+      <h3 class="list-block__title">Поруч</h3>
+      <ul role="list">{nearby.map((t) => <li>{t}</li>)}</ul>
+      <FutureLink>Фітнес-зона</FutureLink>
+    </div>
+    <figure class="club__sauna" data-reveal="fade">
+      <Picture
+        src={sauna}
+        formats={["avif", "webp"]}
+        widths={[400, 640, 900, 1200]}
+        sizes="(min-width: 1024px) 30vw, 100vw"
+        alt="Сауна клубу з дерев'яними полицями і підсвіченою стіною з соляної цегли"
+        loading="lazy"
+        decoding="async"
+      />
+      <figcaption>Сауна для орендарів корту входить у вартість.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<style>
+  .club .baseline { color: var(--color-field); }
+  .club__wide { margin: 0 0 var(--space-10); }
+  .club__wide :global(img) { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; }
+  .club__grid { display: grid; gap: var(--space-10); }
+  .list-block { display: grid; gap: var(--space-4); align-content: start; }
+  .list-block__title { font-size: var(--fs-lead); }
+  .list-block ul { list-style: none; display: grid; }
+  .list-block li { padding-block: var(--space-2); border-top: 1px solid var(--color-chalk-dim); }
+  .list-block li:last-child { border-bottom: 1px solid var(--color-chalk-dim); }
+  .club__sauna { margin: 0; display: grid; gap: var(--space-2); }
+  .club__sauna :global(img) { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; }
+  .club__sauna figcaption { font-size: var(--fs-small); color: var(--color-ink-muted); }
+
+  @media (min-width: 768px) {
+    .club__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--gap); }
+    .club__sauna { grid-column: 1 / -1; max-width: 32rem; }
+  }
+  @media (min-width: 1024px) {
+    .club__wide { width: min(100% - var(--space), calc(var(--container) + (100% - var(--container)) / 2)); margin-left: auto; margin-bottom: var(--space-16); }
+    .club__wide :global(img) { aspect-ratio: 21 / 9; }
+    .club__grid { grid-template-columns: minmax(0, 4fr) minmax(0, 4fr) minmax(0, 4fr); column-gap: var(--space-10); }
+    .club__sauna { grid-column: auto; max-width: none; }
+  }
+</style>

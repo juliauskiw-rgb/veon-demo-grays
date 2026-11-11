@@ -1,0 +1,82 @@
+---
+import { Picture } from "astro:assets";
+import FutureLink from "./FutureLink.astro";
+import Icon from "./Icon.astro";
+import WeekBoard from "./WeekBoard.astro";
+import courtsHall from "../assets/courts-hall.jpg";
+---
+<section id="courts" class="section courts" data-rec="U-R003,M-R002" aria-labelledby="courts-title">
+  <div class="container">
+    <span class="baseline" data-reveal="line" aria-hidden="true"></span>
+    <div class="section-head">
+      <h2 id="courts-title">Корти і ціни на сезон 2026–2027</h2>
+      <p>Три корти з покриттям хард італійського виробника CASALI SPORT. Бронювання — дзвінком на рецепцію тенісу.</p>
+    </div>
+  </div>
+
+  <div class="bleed">
+    <figure class="courts__photo" data-reveal="fade">
+      <Picture
+        src={courtsHall}
+        formats={["avif", "webp"]}
+        widths={[640, 960, 1280, 1600, 2000]}
+        sizes="(min-width: 1024px) 58vw, 100vw"
+        alt="Зал Sport Villa Grays: тенісні корти з хардовим покриттям, сітка і вивіска GRAYS"
+        loading="lazy"
+        decoding="async"
+      />
+    </figure>
+    <div class="courts__facts">
+      <p class="courts__count"><span class="num">3</span> <span>корти</span></p>
+      <dl class="spec">
+        <div><dt>Покриття</dt><dd>Хард CASALI SPORT «Surface Evolution»</dd></div>
+        <div><dt>Сертифікат</dt><dd>ITF 2, середньо-повільний м'яч</dd></div>
+        <div><dt>Після гри</dt><dd>Роздягальні, душ і сауна</dd></div>
+      </dl>
+      <FutureLink>Усе про корти</FutureLink>
+    </div>
+  </div>
+
+  <div class="container">
+    <WeekBoard />
+  </div>
+</section>
+
+<style>
+  .courts { padding-bottom: var(--section-pad); }
+  .courts .baseline { color: var(--color-field); }
+  .bleed {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-6);
+  }
+  .courts__photo { margin: 0; }
+  .courts__photo :global(img) { width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover; }
+  .courts__facts { padding-inline: var(--space); display: grid; gap: var(--space-6); align-content: start; }
+  .courts__count { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-figure); line-height: 1; color: var(--color-field); display: flex; align-items: baseline; gap: var(--space-3); }
+  .courts__count span:last-child { font-size: var(--fs-h3); font-weight: 600; }
+  .spec { margin: 0; display: grid; }
+  .spec div { display: grid; grid-template-columns: 9rem minmax(0, 1fr); gap: var(--space-4); padding-block: var(--space-3); border-top: var(--line) solid var(--color-chalk-dim); }
+  .spec div:last-child { border-bottom: var(--line) solid var(--color-chalk-dim); }
+  .spec dt { color: var(--color-ink-muted); font-size: var(--fs-small); padding-top: var(--space-1); }
+  .spec dd { margin: 0; font-weight: 500; }
+
+  @media (min-width: 1024px) {
+    .bleed {
+      grid-template-columns:
+        minmax(var(--space), 1fr)
+        minmax(0, calc((var(--container) - var(--gap) * 11) / 12 * 7 + var(--gap) * 6))
+        minmax(0, calc((var(--container) - var(--gap) * 11) / 12 * 5 + var(--gap) * 4))
+        minmax(var(--space), 1fr);
+      column-gap: var(--gap);
+      row-gap: 0;
+      margin-bottom: var(--space-16);
+    }
+    .courts__photo { grid-column: 1 / 3; }
+    .courts__photo :global(img) { aspect-ratio: 16 / 10; }
+    .courts__facts { grid-column: 3; padding: var(--space-6) 0 0; }
+  }
+  @media (max-width: 479px) {
+    .spec div { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  }
+</style>

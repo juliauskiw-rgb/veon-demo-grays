@@ -1,0 +1,126 @@
+---
+import { Picture } from "astro:assets";
+import FutureLink from "./FutureLink.astro";
+import Icon from "./Icon.astro";
+import schoolPhoto from "../assets/school-first-court.jpg";
+import { groups, programs, phones, mailto, formatPrice } from "../data/club";
+---
+<section id="school" class="section school" data-rec="U-R004" aria-labelledby="school-title">
+  <div class="container">
+    <span class="baseline" data-reveal="line" aria-hidden="true"></span>
+    <div class="school__grid">
+      <div class="school__main">
+        <div class="section-head">
+          <h2 id="school-title">Школа тенісу за методикою ITF Play&amp;Stay</h2>
+          <p>Школа працює з вересня 2022 року. Тренери мають сертифікати ITF Play&amp;Stay.</p>
+        </div>
+
+        <h3 class="sub">Групи за віком</h3>
+        <ul class="groups" role="list">
+          {groups.map((g) => (
+            <li class="group">
+              <span class="group__ages num">{g.ages}</span>
+              <span class="group__unit">{g.unit}</span>
+            </li>
+          ))}
+        </ul>
+
+        <h3 class="sub">Перший візит</h3>
+        <ol class="steps">
+          <li><span class="steps__n num">1</span>Телефонуєте на рецепцію тенісу</li>
+          <li><span class="steps__n num">2</span>Перше заняття безкоштовне, інвентар дамо</li>
+          <li><span class="steps__n num">3</span>Обираєте програму і групу за віком</li>
+        </ol>
+
+        <div class="school__cta">
+          <a class="btn btn--action" href={phones.tennis.tel}>Записатися на пробне <Icon name="arrow" /></a>
+          <a class="btn btn--outline" href={mailto("Пробне заняття")}><Icon name="mail" /> Написати</a>
+        </div>
+        <p class="school__phone">Рецепція тенісу: <a class="phone-line" href={phones.tennis.tel}>{phones.tennis.display}</a></p>
+      </div>
+
+      <figure class="school__photo" data-reveal="fade">
+        <Picture
+          src={schoolPhoto}
+          formats={["avif", "webp"]}
+          widths={[400, 640, 900, 1200]}
+          sizes="(min-width: 1024px) 34vw, 100vw"
+          alt="Хлопчик з м'ячем біля сітки на корті Sport Villa Grays, поруч дитяча ракетка"
+          loading="lazy"
+          decoding="async"
+        />
+      </figure>
+    </div>
+
+    <div class="programs">
+      <div class="programs__head">
+        <h3 class="sub">Програми і ціни</h3>
+        <p>Ціна — за курс. Курс триває 8–9 місяців.</p>
+      </div>
+      <ul class="programs__list" role="list">
+        {programs.map((p) => (
+          <li class="program">
+            <span class="program__name">{p.name}</span>
+            {p.price
+              ? <span class="program__price num">{formatPrice(p.price)}&nbsp;грн <span class="program__per">за курс</span></span>
+              : <span class="program__price program__price--ask">ціну уточнюйте на рецепції</span>}
+          </li>
+        ))}
+      </ul>
+      <FutureLink>Усі програми школи</FutureLink>
+    </div>
+  </div>
+</section>
+
+<style>
+  .school .baseline { color: var(--color-field); }
+  .school__grid { display: grid; gap: var(--space-10); }
+  .sub { font-size: var(--fs-lead); margin: var(--space-10) 0 var(--space-4); }
+  .section-head + .sub { margin-top: 0; }
+
+  .groups { list-style: none; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 var(--gap); }
+  .group { display: grid; gap: var(--space-1); padding-block: var(--space-3) var(--space-4); border-top: var(--line) solid var(--color-field); }
+  .group__ages { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-figure-sm); line-height: 1; color: var(--color-field); white-space: nowrap; }
+  .group:last-child .group__ages { font-size: var(--fs-lead); padding-top: var(--space-2); }
+  .group__unit { font-size: var(--fs-small); color: var(--color-ink-muted); }
+
+  .steps { list-style: none; display: grid; gap: var(--space-3); counter-reset: none; }
+  .steps li { display: grid; grid-template-columns: 2.5rem minmax(0, 1fr); align-items: baseline; font-size: var(--fs-lead); line-height: 1.35; }
+  .steps__n { font-family: var(--font-display); font-weight: 700; color: var(--color-field); }
+
+  .school__cta { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-10); }
+  .school__phone { margin-top: var(--space-3); color: var(--color-ink-muted); }
+  .school__phone a { color: var(--color-ink); font-weight: 600; }
+
+  .school__photo { margin: 0; }
+  .school__photo :global(img) { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; }
+
+  .programs { margin-top: var(--space-16); display: grid; gap: var(--space-4); }
+  .programs__head { display: grid; gap: var(--space-2); }
+  .programs__head .sub { margin: 0; }
+  .programs__head p { color: var(--color-ink-muted); }
+  .programs__list { list-style: none; display: grid; }
+  .program { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: var(--space-1) var(--space-6); padding-block: var(--space-3); border-top: var(--line) solid var(--color-chalk-dim); }
+  .program:last-child { border-bottom: var(--line) solid var(--color-chalk-dim); }
+  .program__name { font-weight: 600; }
+  .program__price { font-family: var(--font-display); font-weight: 600; font-size: var(--fs-lead); color: var(--color-field); white-space: nowrap; }
+  .program__per { font-family: var(--font-body); font-size: var(--fs-small); font-weight: 500; color: var(--color-ink-muted); }
+  .program__price--ask { font-family: var(--font-body); font-size: var(--fs-body); font-weight: 500; color: var(--color-ink-muted); white-space: normal; }
+
+  @media (min-width: 640px) {
+    .groups { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  }
+  @media (min-width: 1024px) {
+    .school__grid { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); column-gap: var(--space-16); align-items: start; }
+    .school__photo { position: relative; margin-top: var(--space-2); }
+    .programs { grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); column-gap: var(--space-16); align-items: start; }
+    .programs > :global(.future-link) { grid-column: 2; justify-self: start; }
+  }
+  @media (max-width: 1023px) {
+    .school__photo { max-width: 28rem; }
+  }
+  @media (max-width: 559px) {
+    .program { flex-direction: column; align-items: start; }
+    .school__cta .btn { flex: 1 1 100%; }
+  }
+</style>
